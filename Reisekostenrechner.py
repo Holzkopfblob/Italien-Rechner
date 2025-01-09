@@ -51,7 +51,7 @@ with col_left:
     # -----------------------------------------------------
 
     # Festpreis inkl. Tank
-    FESTPREIS = 582.0
+    FESTPREIS = 525.0
 
     def mietwagen_kosten_pro_auto(tage: int) -> float:
         """
