@@ -45,12 +45,6 @@ with col_left:
     anzahl_personen = st.slider("Anzahl Personen", 3, 12, 6)
     anzahl_tage = st.slider("Anzahl Reisetage", 7, 14, 7)
     ski_tage = st.slider("Skitage", 0, anzahl_tage, 0)
-    aktivitaeten = st.number_input(
-        "Aktivitäten (gesamt in €)",
-        min_value=0,
-        step=50,
-        value=0
-    )
 
     # -----------------------------------------------------
     # Neue Mietwagen-Logik
@@ -96,18 +90,14 @@ with col_left:
     skikosten_min = 60 * ski_tage * anzahl_personen
     skikosten_max = skikosten_min
 
-    # Aktivitäten
-    akt_min = aktivitaeten
-    akt_max = aktivitaeten
-
-    # Summen min / max
+    # Summen min / max (ohne Aktivitäten)
     gesamt_min = (
         mietwagen_min + unterkunft_min
-        + verpflegung_min + skikosten_min + akt_min
+        + verpflegung_min + skikosten_min
     )
     gesamt_max = (
         mietwagen_max + unterkunft_max
-        + verpflegung_max + skikosten_max + akt_max
+        + verpflegung_max + skikosten_max
     )
 
     # Pro Person
@@ -125,7 +115,8 @@ with col_left:
     st.subheader("Kostenübersicht")
 
     def fmt(euro):
-        return f"{euro:,.0f} €"
+        # Tausender-Trennzeichen mit '.' statt ','
+        return f"{'{:,.0f}'.format(euro).replace(',', '.')} €"
 
     table_data = [
         {
@@ -157,13 +148,6 @@ with col_left:
             "p.P. min": fmt(skikosten_min / anzahl_personen if anzahl_personen else 0),
         },
         {
-            "Kategorie": "Aktivitäten",
-            "Gesamt max.": fmt(akt_max),
-            "Gesamt min.": fmt(akt_min),
-            "p.P. max": fmt(akt_max / anzahl_personen if anzahl_personen else 0),
-            "p.P. min": fmt(akt_min / anzahl_personen if anzahl_personen else 0),
-        },
-        {
             "Kategorie": "Gesamt",
             "Gesamt max.": fmt(gesamt_max),
             "Gesamt min.": fmt(gesamt_min),
@@ -175,7 +159,8 @@ with col_left:
     st.table(table_data)
 
 with col_right:
-    st.subheader("Diagramm: Kosten pro Person")
+    # Diagrammtitel ohne "Diagramm:"
+    st.subheader("Kosten pro Person")
 
     # Für das Diagramm: Gestapelte Balken (Min + Delta)
     def to_delta_rows(cat: str, min_val: float, max_val: float) -> list:
@@ -207,14 +192,14 @@ with col_right:
 
     df_stacked = pd.DataFrame(df_stack)
 
-    # Altair Stacked Bar Chart
+    # Altair Stacked Bar Chart (Legende entfernt)
     chart = (
         alt.Chart(df_stacked)
         .mark_bar()
         .encode(
             x=alt.X("Kategorie:N", title="", sort=None),
             y=alt.Y("Wert:Q", title="Kosten pro Person (€)", stack="zero"),
-            color=alt.Color("Typ:N", legend=None),  # Entferne die Legende
+            color=alt.Color("Typ:N", legend=None),
             tooltip=["Kategorie:N", "Typ:N", "Wert:Q"]
         )
         .properties(width=500, height=400)
