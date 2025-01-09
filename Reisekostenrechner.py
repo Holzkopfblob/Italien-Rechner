@@ -175,7 +175,7 @@ with col_left:
     st.table(table_data)
 
 with col_right:
-    st.subheader("Diagramm: Kosten pro Person (Stacked Min + (Max-Min))")
+    st.subheader("Diagramm: Kosten pro Person")
 
     # Für das Diagramm: Gestapelte Balken (Min + Delta)
     def to_delta_rows(cat: str, min_val: float, max_val: float) -> list:
