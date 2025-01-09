@@ -202,8 +202,6 @@ with col_right:
     df_stack += to_delta_rows("Verpflegung", val_pp(verpflegung_min), val_pp(verpflegung_max))
     # Skikosten
     df_stack += to_delta_rows("Skikosten", val_pp(skikosten_min), val_pp(skikosten_max))
-    # Aktivitäten
-    df_stack += to_delta_rows("Aktivitäten", val_pp(akt_min), val_pp(akt_max))
     # Gesamt
     df_stack += to_delta_rows("Gesamt", gesamt_min_pp, gesamt_max_pp)
 
@@ -216,7 +214,7 @@ with col_right:
         .encode(
             x=alt.X("Kategorie:N", title="", sort=None),
             y=alt.Y("Wert:Q", title="Kosten pro Person (€)", stack="zero"),
-            color=alt.Color("Typ:N", legend=alt.Legend(title="Anteil")),
+            color=alt.Color("Typ:N", legend=None),  # Entferne die Legende
             tooltip=["Kategorie:N", "Typ:N", "Wert:Q"]
         )
         .properties(width=500, height=400)
