@@ -122,7 +122,7 @@ with col_left:
     # Tabelle
     # Kategorie | Gesamt max. | Gesamt min. | p.P. max | p.P. min
     # -----------------------------------------------------
-    st.subheader("Kostenübersicht (Tabelle)")
+    st.subheader("Kostenübersicht")
 
     def fmt(euro):
         return f"{euro:,.0f} €"
